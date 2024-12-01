@@ -1,9 +1,9 @@
 function Navbar() {
   return (
     <nav>
-      <ul>
+      <ul className="flex gap-2">
         <li>Home</li>
-        <li>About</li>
+        <li>Store</li>
         <li>Contact</li>
       </ul>
     </nav>
