@@ -11,7 +11,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "../../components/ui/dialog";
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
@@ -23,44 +22,23 @@ import {
   SelectValue,
 } from "../../components/ui/select";
 import { Textarea } from "../../components/ui/textarea";
-import { Plus, Edit, Trash2, ImagePlus } from "lucide-react";
+import { Plus } from "lucide-react";
 
 import { Product, ProductImage, Category } from "../../types/productTypes";
 import ProductTable from "./ui/ProductTable";
 import ProductImageUploader from "./ui/ProductImageUploader";
+import { useQuery, useQueryClient } from "react-query";
+import { getProducts } from "../../api/products";
 
 const Products: React.FC = () => {
+  const queryClient = useQueryClient();
+  const { data, isLoading, error } = useQuery(["products"], getProducts);
+  console.log(data);
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [productImages, setProductImages] = useState<ProductImage[]>([]);
-
-  // Mocked data fetch - replace with actual API calls
-  useEffect(() => {
-    // Simulated data fetch
-    const fetchInitialData = () => {
-      setCategories([
-        { id: 1, name: "Electronics" },
-        { id: 2, name: "Clothing" },
-        { id: 3, name: "Books" },
-      ]);
-
-      setProducts([
-        {
-          id: 1,
-          name: "Smartphone",
-          description: "Latest model smartphone",
-          price: 799.99,
-          stock: 50,
-          overview_img_url: null,
-          category_id: 1,
-        },
-      ]);
-    };
-
-    fetchInitialData();
-  }, []);
 
   const handleAddProduct = () => {
     setSelectedProduct({
@@ -118,7 +96,9 @@ const Products: React.FC = () => {
         </CardHeader>
         <CardContent>
           <ProductTable
-            products={products}
+            products={data && data.products}
+            isLoading={isLoading}
+            error={error}
             categories={categories}
             onEdit={handleEditProduct}
             onDelete={handleDeleteProduct}
