@@ -9,12 +9,11 @@ import {
 } from "../../../components/ui/table";
 import { Button } from "../../../components/ui/button";
 import { Edit, Trash2, PackageX } from "lucide-react";
-import { Product, Category } from "../../../types/productTypes";
+import { Product } from "../../../types/product";
 import { motion } from "framer-motion";
 
 interface ProductTableProps {
   products: Product[];
-  categories: Category[];
   isLoading: boolean;
   error?: any;
   onEdit: (product: Product) => void;
@@ -23,17 +22,11 @@ interface ProductTableProps {
 
 const ProductTable: React.FC<ProductTableProps> = ({
   products,
-  categories,
   isLoading,
   error,
   onEdit,
   onDelete,
 }) => {
-  const getCategoryName = (categoryId?: number) => {
-    const category = categories.find((c) => c.id === categoryId);
-    return category ? category.name : "Uncategorized";
-  };
-
   const loadingAnimation = {
     initial: { opacity: 0.6, backgroundColor: "#f3f4f6" },
     animate: {
@@ -107,7 +100,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
                   {product.stock}
                 </span>
               </TableCell>
-              <TableCell>{getCategoryName(product.category_id)}</TableCell>
+              <TableCell>{product.category_name as string}</TableCell>
               <TableCell className="text-right">
                 <Button
                   variant="ghost"

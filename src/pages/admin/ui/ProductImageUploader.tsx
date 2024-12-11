@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { Button } from "../../../components/ui/button";
 import { ImagePlus, Trash2 } from "lucide-react";
-import { ProductImage } from "../../../types/productTypes";
+import { ProductImage } from "../../../types/product";
 
 interface ProductImageUploaderProps {
   productId?: number;

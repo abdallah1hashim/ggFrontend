@@ -7,6 +7,12 @@ import Users from "./pages/admin/Users";
 import Categories from "./pages/admin/Categories";
 import Orders from "./pages/admin/Orders";
 import AdminLayout from "./layouts/AdminLayout";
+import { ProductProvider } from "./contexts/ProductContext";
+import RootLayout from "./layouts/RootLayout";
+import AuthLayout from "./layouts/AuthLayout";
+import Login from "./pages/auth/Login";
+import SignUp from "./pages/auth/Signup";
+import { AuthProvider } from "./contexts/AuthContext";
 
 const queryClient = new QueryClient();
 
@@ -16,14 +22,33 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/admin" element={<AdminLayout />}>
-              <Route index element={<Navigate to="dashboard" replace />} />
-              <Route path="dashboard" element={<Dashboard />} index />
-              <Route path="products" element={<Products />} />
-              <Route path="users" element={<Users />} />
-              <Route path="categories" element={<Categories />} />
-              <Route path="orders" element={<Orders />} />
+            <Route
+              element={
+                <AuthProvider>
+                  <RootLayout />
+                </AuthProvider>
+              }
+            >
+              <Route path="/" element={<Home />} />
+              <Route element={<AuthLayout />}>
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<SignUp />} />
+              </Route>
+              <Route path="/admin" element={<AdminLayout />}>
+                <Route index element={<Navigate to="dashboard" replace />} />
+                <Route path="dashboard" element={<Dashboard />} index />
+                <Route
+                  path="products"
+                  element={
+                    <ProductProvider>
+                      <Products />
+                    </ProductProvider>
+                  }
+                />
+                <Route path="users" element={<Users />} />
+                <Route path="categories" element={<Categories />} />
+                <Route path="orders" element={<Orders />} />
+              </Route>
             </Route>
           </Routes>
         </BrowserRouter>

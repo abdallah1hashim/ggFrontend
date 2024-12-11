@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useCallback } from "react";
 import {
   Card,
   CardContent,
@@ -6,215 +6,119 @@ import {
   CardTitle,
 } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "../../components/ui/dialog";
-import { Input } from "../../components/ui/input";
-import { Label } from "../../components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../../components/ui/select";
-import { Textarea } from "../../components/ui/textarea";
-import { Plus } from "lucide-react";
-
-import { Product, ProductImage, Category } from "../../types/productTypes";
+import { Plus, AlertCircle, Loader2 } from "lucide-react";
+import { toast } from "../../hooks/use-toast";
+import { Product } from "../../types/product";
 import ProductTable from "./ui/ProductTable";
-import ProductImageUploader from "./ui/ProductImageUploader";
-import { useQuery, useQueryClient } from "react-query";
-import { getProducts } from "../../api/products";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { getProducts, deleteProduct } from "../../api/products";
+import { Alert, AlertTitle, AlertDescription } from "../../components/ui/alert";
+import ProductForm from "./ui/ProductForm";
+import { useProduct } from "../../contexts/ProductContext";
 
 const Products: React.FC = () => {
   const queryClient = useQueryClient();
-  const { data, isLoading, error } = useQuery(["products"], getProducts);
-  console.log(data);
-  const [products, setProducts] = useState<Product[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [productImages, setProductImages] = useState<ProductImage[]>([]);
 
-  const handleAddProduct = () => {
-    setSelectedProduct({
-      name: "",
-      description: "",
-      price: 0,
-      stock: 0,
-      overview_img_url: null,
-    });
+  const {
+    setIsDialogOpen,
+    setSelectedProduct,
+    setFormData,
+    formData,
+    setValidationErrors,
+    selectedProduct,
+    initialProductState,
+  } = useProduct();
+  const {
+    data,
+    isLoading: isProductsLoading,
+    error: productsError,
+  } = useQuery<{ products: Product[] }, Error>(["products"], getProducts, {
+    // Add retry logic
+    retry: 2,
+    // Add error handling
+    onError: (error) => {
+      toast({
+        title: "Failed to Load Products",
+        description:
+          error.message || "Unable to fetch products. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const deleteProductMutation = useMutation(deleteProduct, {
+    onSuccess: (response) => {
+      queryClient.invalidateQueries("products");
+      toast({
+        title: "Product Deleted",
+        description: response?.message || "Product successfully removed.",
+        variant: "default",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Deletion Error",
+        description:
+          error.response?.data?.message || "Failed to delete product.",
+        variant: "destructive",
+      });
+    },
+  });
+  // Handlers for adding and editing products
+  const handleAddProduct = useCallback(() => {
+    setSelectedProduct({ ...initialProductState });
+    setValidationErrors({});
+    setFormData(new FormData());
     setIsDialogOpen(true);
-  };
+  }, []);
 
-  const handleEditProduct = (product: Product) => {
-    setSelectedProduct(product);
+  const handleEditProduct = useCallback((product: Product) => {
+    setSelectedProduct({ ...product });
+    setFormData(new FormData());
+    setValidationErrors({});
     setIsDialogOpen(true);
-  };
-
-  const handleSaveProduct = () => {
-    if (!selectedProduct) return;
-
-    if (selectedProduct.id) {
-      // Update existing product
-      setProducts(
-        products.map((p) =>
-          p.id === selectedProduct.id ? selectedProduct : p,
-        ),
-      );
-    } else {
-      // Add new product
-      const newProduct = {
-        ...selectedProduct,
-        id: products.length + 1,
-      };
-      setProducts([...products, newProduct]);
-    }
-
-    setIsDialogOpen(false);
-    setSelectedProduct(null);
-  };
-
-  const handleDeleteProduct = (id: number) => {
-    setProducts(products.filter((p) => p.id !== id));
-  };
+  }, []);
 
   return (
     <div className="container mx-auto p-4">
+      {productsError && (
+        <Alert variant="destructive" className="mb-4">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>
+            Failed to load products. Please try again later.
+          </AlertDescription>
+        </Alert>
+      )}
+
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle>Product Management</CardTitle>
-            <Button onClick={handleAddProduct}>
+            <Button onClick={handleAddProduct} aria-label="Add New Product">
               <Plus className="mr-2" /> Add Product
             </Button>
           </div>
         </CardHeader>
         <CardContent>
-          <ProductTable
-            products={data && data.products}
-            isLoading={isLoading}
-            error={error}
-            categories={categories}
-            onEdit={handleEditProduct}
-            onDelete={handleDeleteProduct}
-          />
+          {isProductsLoading ? (
+            <div className="flex items-center justify-center">
+              <Loader2 className="mr-2 h-8 w-8 animate-spin" />
+              <p>Loading products...</p>
+            </div>
+          ) : (
+            <ProductTable
+              products={data?.products || []}
+              isLoading={isProductsLoading}
+              error={productsError}
+              onEdit={handleEditProduct}
+              onDelete={(id) => deleteProductMutation.mutate(id)}
+            />
+          )}
         </CardContent>
       </Card>
 
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="sm:max-w-[800px]">
-          <DialogHeader>
-            <DialogTitle>
-              {selectedProduct?.id ? "Edit Product" : "Add New Product"}
-            </DialogTitle>
-          </DialogHeader>
-
-          <div className="grid grid-cols-2 gap-4">
-            {/* Product Details Column */}
-            <div>
-              <div className="grid gap-4">
-                <div>
-                  <Label>Product Name</Label>
-                  <Input
-                    value={selectedProduct?.name || ""}
-                    onChange={(e) =>
-                      setSelectedProduct((prev) =>
-                        prev ? { ...prev, name: e.target.value } : null,
-                      )
-                    }
-                  />
-                </div>
-                <div>
-                  <Label>Description</Label>
-                  <Textarea
-                    value={selectedProduct?.description || ""}
-                    onChange={(e) =>
-                      setSelectedProduct((prev) =>
-                        prev ? { ...prev, description: e.target.value } : null,
-                      )
-                    }
-                  />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label>Price</Label>
-                    <Input
-                      type="number"
-                      value={selectedProduct?.price || 0}
-                      onChange={(e) =>
-                        setSelectedProduct((prev) =>
-                          prev
-                            ? { ...prev, price: Number(e.target.value) }
-                            : null,
-                        )
-                      }
-                    />
-                  </div>
-                  <div>
-                    <Label>Stock</Label>
-                    <Input
-                      type="number"
-                      value={selectedProduct?.stock || 0}
-                      onChange={(e) =>
-                        setSelectedProduct((prev) =>
-                          prev
-                            ? { ...prev, stock: Number(e.target.value) }
-                            : null,
-                        )
-                      }
-                    />
-                  </div>
-                </div>
-                <div>
-                  <Label>Category</Label>
-                  <Select
-                    value={String(selectedProduct?.category_id)}
-                    onValueChange={(value) =>
-                      setSelectedProduct((prev) =>
-                        prev ? { ...prev, category_id: Number(value) } : null,
-                      )
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select Category" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {categories.map((category) => (
-                        <SelectItem
-                          key={category.id}
-                          value={String(category.id)}
-                        >
-                          {category.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-            </div>
-
-            {/* Product Images Column */}
-            <div>
-              <ProductImageUploader
-                productId={selectedProduct?.id}
-                onImagesUpdate={(images) => setProductImages(images)}
-              />
-            </div>
-          </div>
-
-          <div className="mt-4 flex justify-end space-x-2">
-            <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
-              Cancel
-            </Button>
-            <Button onClick={handleSaveProduct}>Save Product</Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+      <ProductForm />
     </div>
   );
 };
