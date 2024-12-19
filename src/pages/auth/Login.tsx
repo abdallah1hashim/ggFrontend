@@ -22,15 +22,13 @@ const Login: React.FC = () => {
     formState: { errors },
   } = useForm<LoginFormInputs>();
   const [error, setError] = React.useState<string | null>(null);
-  const { setTokens } = useAuth();
+  const { setUser } = useAuth();
 
   const { mutate } = useMutation(login, {
     onSuccess: (data) => {
       // Handle successful login
-      setTokens({
-        accessToken: data.access_token,
-        refreshToken: data.refresh_token,
-      });
+      console.log(data);
+      setUser(data.userData);
       toast({
         title: "Success",
         type: "foreground",

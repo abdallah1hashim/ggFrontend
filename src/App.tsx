@@ -1,4 +1,3 @@
-import { Home } from "lucide-react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Dashboard from "./pages/admin/Dashboard";
@@ -13,6 +12,10 @@ import AuthLayout from "./layouts/AuthLayout";
 import Login from "./pages/auth/Login";
 import SignUp from "./pages/auth/Signup";
 import { AuthProvider } from "./contexts/AuthContext";
+import Home from "./pages/home/Home";
+import PageNotFound from "./pages/PageNotFound";
+import Store from "./pages/store/Store";
+import StoreLayout from "./layouts/StoreLayout";
 
 const queryClient = new QueryClient();
 
@@ -21,19 +24,22 @@ function App() {
     <>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <Routes>
-            <Route
-              element={
-                <AuthProvider>
-                  <RootLayout />
-                </AuthProvider>
-              }
-            >
-              <Route path="/" element={<Home />} />
-              <Route element={<AuthLayout />}>
-                <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<SignUp />} />
+          <AuthProvider>
+            <Routes>
+              <Route element={<RootLayout />}>
+                <Route path="/" element={<Home />} />
+                {/* Auth Routes */}
+                <Route element={<AuthLayout />}>
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/signup" element={<SignUp />} />
+                </Route>
+                {/* Store Routes */}
+                <Route element={<StoreLayout />}>
+                  <Route path="/store" element={<Store />} />
+                </Route>
+                <Route path="*" element={<PageNotFound />} />
               </Route>
+              {/* Admin Routes */}
               <Route path="/admin" element={<AdminLayout />}>
                 <Route index element={<Navigate to="dashboard" replace />} />
                 <Route path="dashboard" element={<Dashboard />} index />
@@ -49,8 +55,8 @@ function App() {
                 <Route path="categories" element={<Categories />} />
                 <Route path="orders" element={<Orders />} />
               </Route>
-            </Route>
-          </Routes>
+            </Routes>
+          </AuthProvider>
         </BrowserRouter>
       </QueryClientProvider>
     </>

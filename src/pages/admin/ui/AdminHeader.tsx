@@ -1,4 +1,4 @@
-import { Bell, Search, LogOut } from "lucide-react";
+import { Bell, Search } from "lucide-react";
 import { Input } from "../../../components/ui/input";
 import {
   DropdownMenu,
@@ -16,6 +16,7 @@ import {
 import { Button } from "../../../components/ui/button";
 
 import Logo from "../../../components/Logo";
+import Logout from "../../../components/ui/Logout";
 
 function AdminHeader() {
   return (
@@ -51,7 +52,7 @@ function AdminHeader() {
           <DropdownMenuItem>Settings</DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem className="text-destructive">
-            <LogOut className="mr-2 h-4 w-4" /> Logout
+            <Logout />
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

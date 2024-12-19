@@ -3,3 +3,7 @@ export interface Category {
   name: string;
   parentId?: number;
 }
+
+export interface CategoryWithChildren extends Category {
+  children: CategoryWithChildren[];
+}

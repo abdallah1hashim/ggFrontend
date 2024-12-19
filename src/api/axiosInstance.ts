@@ -1,4 +1,6 @@
 import axios from "axios";
+import { clearAuthStorage } from "../lib/utils";
+import { redirect } from "react-router-dom";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -7,54 +9,25 @@ const axiosInstance = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true,
 });
 
-axiosInstance.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem("accessToken");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error),
-);
-
 axiosInstance.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    const originalRequest = error.config;
+  (response) => {
+    // If the request is successful, just return the response
+    return response;
+  },
+  (error) => {
+    const errorMessage = error.response?.data?.message || "";
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-
-      const refreshToken = localStorage.getItem("refreshToken");
-
-      if (!refreshToken) {
-        window.location.href = "/login";
-        return Promise.reject(error);
-      }
-
-      try {
-        const refreshResponse = await axiosInstance.post("/auth/refresh", {
-          refreshToken,
-        });
-
-        const { access_token: newAccessToken, refresh_token: newRefreshToken } =
-          refreshResponse.data;
-
-        localStorage.setItem("accessToken", newAccessToken);
-        localStorage.setItem("refreshToken", newRefreshToken);
-
-        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-        return axiosInstance(originalRequest);
-      } catch (refreshError) {
-        localStorage.clear();
-        window.location.href = "/login";
-        return Promise.reject(refreshError);
-      }
+    if (
+      errorMessage.includes("No access token provided") ||
+      errorMessage.includes("No cookies provided") ||
+      errorMessage.includes("Token expired")
+    ) {
     }
-
+    clearAuthStorage();
+    redirect("/session-expired");
     return Promise.reject(error);
   },
 );

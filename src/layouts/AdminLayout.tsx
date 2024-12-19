@@ -28,6 +28,10 @@ const AdminLayout = () => {
     }
   }, [confirmedUser]);
 
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="flex h-screen">
       {/* Mobile Sidebar */}

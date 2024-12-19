@@ -1,18 +1,20 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { jwtDecode } from "jwt-decode";
 import { UserPublicData } from "../types/user";
 import FullScreenLoader from "../components/ui/FullScreenLoader";
 import { AnimatePresence } from "framer-motion";
+import { clearAuthStorage } from "../lib/utils";
+import { useMutation } from "react-query";
+import { logoutRequest } from "../api/auth";
+import { toast } from "../hooks/use-toast";
+
+const environment = import.meta.env.VITE_ENVIROMENT;
 
 type AuthContextType = {
-  tokens: { accessToken: string; refreshToken: string } | null;
-  setTokens: React.Dispatch<
-    React.SetStateAction<{ accessToken: string; refreshToken: string } | null>
-  >;
   user: UserPublicData | null;
   setUser: React.Dispatch<React.SetStateAction<UserPublicData | null>>;
   logout: () => void;
   confirmedUser: UserPublicData | null;
+  isLoggedIn: boolean;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -20,56 +22,60 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [tokens, setTokens] = useState<{
-    accessToken: string;
-    refreshToken: string;
-  } | null>(null);
   const [user, setUser] = useState<UserPublicData | null>(null);
   const [isInitializing, setIsInitializing] = useState(true);
+
+  const isLoggedIn = !!user;
+
   useEffect(() => {
-    if (tokens) {
-      localStorage.setItem("access_token", tokens.accessToken);
-      localStorage.setItem("refresh_token", tokens.refreshToken);
-      const decodedToken = jwtDecode(tokens.accessToken);
-      localStorage.setItem("user", JSON.stringify(decodedToken));
+    const savedUser = localStorage.getItem("user");
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
     }
-  }, [tokens]);
-  useEffect(() => {
-    const initializeAuth = async () => {
-      try {
-        const savedUser = localStorage.getItem("user");
-
-        // minimum loading time to show the loader
-        await new Promise((resolve) => setTimeout(resolve, 1500));
-
-        setUser(savedUser ? JSON.parse(savedUser) : null);
-      } catch (error) {
-        console.error("Authentication initialization error:", error);
-        localStorage.clear();
-      } finally {
-        setIsInitializing(false);
-      }
-    };
-
-    initializeAuth();
+    setIsInitializing(false);
   }, []);
 
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem("user", JSON.stringify(user));
+    }
+  }, [user]);
+
+  const { mutate: logoutMutation } = useMutation(logoutRequest, {
+    onSuccess: () => {
+      toast({
+        title: "Logged out",
+        description: "You have been logged out successfully.",
+        type: "foreground",
+        duration: 3000,
+      });
+      setUser(null);
+      clearAuthStorage();
+      window.location.href = "/";
+    },
+    onError: (error: any) => {
+      if (environment === "development") {
+        console.log(error.response.data.message);
+      }
+      toast({
+        title: "Error",
+        description: error.response.data.message,
+        type: "background",
+        duration: 3000,
+      });
+    },
+  });
+
   const logout = () => {
-    setTokens(null);
-    setUser(null);
-    localStorage.clear();
-    window.location.href = "/login";
+    logoutMutation();
   };
 
   const confirmedUser =
-    user ||
-    (localStorage.getItem("user")
-      ? JSON.parse(localStorage.getItem("user") || "")
-      : null);
+    user || JSON.parse(localStorage.getItem("user") || "null");
 
   return (
     <AuthContext.Provider
-      value={{ tokens, setTokens, user, setUser, logout, confirmedUser }}
+      value={{ user, setUser, logout, confirmedUser, isLoggedIn }}
     >
       <AnimatePresence>
         {isInitializing && <FullScreenLoader />}

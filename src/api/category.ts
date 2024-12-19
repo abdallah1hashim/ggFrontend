@@ -1,5 +1,9 @@
 import axiosInstance from "./axiosInstance";
 
+export const fetchNestedCategories = async () => {
+  const response = await axiosInstance.get("/shop/categories?isnested=true");
+  return response.data;
+};
 export const fetchCategories = async () => {
   const response = await axiosInstance.get("/shop/categories");
   return response.data;
