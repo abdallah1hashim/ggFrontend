@@ -24,7 +24,7 @@ function NavbarMenuListItem({
         <Link
           to={`/store/${category.name}`}
           onClick={() => setMenuOpen(false)}
-          className="text-lg font-semibold text-primary-50 hover:text-primary-300"
+          className="text-lg font-semibold text-primary-50 hover:text-primary-200"
         >
           {category.name}
         </Link>

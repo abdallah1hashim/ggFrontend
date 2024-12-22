@@ -32,16 +32,9 @@ export default {
           DEFAULT: "#000000",
         },
         secondary: {
-          50: "#ffffff",
           100: "#f9f9f9",
-          200: "#f0f0f0",
-          300: "#d9d9d9",
-          400: "#bfbfbf",
-
-          500: "#a6a6a6",
-          600: "#737373",
-          700: "#595959",
-          800: "#404040",
+          200: "#a6a6a6",
+          300: "#404040",
           DEFAULT: "#ffffff",
         },
       },
@@ -51,10 +44,18 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
     },
-    plugins: [],
   },
   plugins: [
     require("tailwindcss-animate"),
     require("@tailwindcss/aspect-ratio"),
+    function ({ addUtilities }) {
+      addUtilities({
+        ".mask-linear-gradient": {
+          mask: "linear-gradient(90deg, transparent, white 20%, white 80%, transparent)",
+          webkitMask:
+            "linear-gradient(90deg, transparent, white 20%, white 80%, transparent)",
+        },
+      });
+    },
   ],
 };

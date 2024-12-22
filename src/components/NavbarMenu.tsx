@@ -4,6 +4,7 @@ import { useQuery } from "react-query";
 import { fetchNestedCategories } from "../api/category";
 import { CategoryWithChildren } from "../types/categories";
 import NavbarMenuListItem from "./NavbarMenuListItem";
+import { useAuth } from "../contexts/AuthContext";
 
 function NavbarMenu({
   menuOpen,
@@ -17,6 +18,8 @@ function NavbarMenu({
     isLoading,
     error,
   } = useQuery("categories", fetchNestedCategories);
+
+  const { user } = useAuth();
 
   return (
     <>
@@ -40,6 +43,14 @@ function NavbarMenu({
               Home
             </Link>
           </li>
+          {user?.role === "admin" && (
+            <li>
+              <Link to="/admin" onClick={() => setMenuOpen(false)}>
+                Admin Panel
+              </Link>
+            </li>
+          )}
+
           <li>
             <Link to="/store" onClick={() => setMenuOpen(false)}>
               Store
@@ -64,6 +75,11 @@ function NavbarMenu({
           <li>
             <Link to="/login" onClick={() => setMenuOpen(false)}>
               Login
+            </Link>
+          </li>
+          <li>
+            <Link to="/login" onClick={() => setMenuOpen(false)}>
+              Register
             </Link>
           </li>
         </ul>

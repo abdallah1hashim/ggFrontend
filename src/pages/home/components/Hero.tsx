@@ -13,7 +13,7 @@ function Hero() {
           loop
           muted
         ></video>
-        <div className="absolute inset-0 z-10 h-full bg-gradient-to-b from-transparent via-transparent to-black"></div>
+        <div className="absolute inset-0 z-10 h-full bg-gradient-to-b from-transparent via-transparent to-primary-800"></div>
         <div className="absolute left-[50%] top-[50%] h-40 w-40 translate-x-[-50%] translate-y-[-50%] rounded-full">
           <div className="flex items-center justify-center">
             <img src={logo} alt="logo" />

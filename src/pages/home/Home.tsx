@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import BentoGrid from "./components/BentoGrid";
 import Hero from "./components/Hero";
-import SlidingCards from "./components/SlidingCards";
+import Scroller from "./components/Scroller";
 import { useScroll } from "framer-motion";
 import ShopWithUs from "./components/ShopWithUs";
 
@@ -12,7 +12,7 @@ function Home() {
   return (
     <div ref={ref}>
       <Hero />
-      <SlidingCards />
+      <Scroller />
       <BentoGrid />
       <ShopWithUs />
     </div>
