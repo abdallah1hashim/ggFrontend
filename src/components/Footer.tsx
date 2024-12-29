@@ -1,14 +1,13 @@
 import { FaCcMastercard, FaCcVisa, FaXTwitter } from "react-icons/fa6";
 import { CiInstagram } from "react-icons/ci";
-
 import { FaFacebook, FaAmazon, FaTiktok } from "react-icons/fa";
 import Logo from "./Logo";
 
 function Footer() {
   return (
-    <footer className="py-8">
-      <div className="container">
-        <div className="flex justify-between gap-28">
+    <footer className="bg-primary py-8">
+      <div className="container mx-auto px-4">
+        <div className="flex flex-col justify-between gap-8 md:flex-row md:gap-28">
           <div className="flex flex-col gap-2">
             <Logo size="small" />
             <div className="text-4xl font-bold">GENTEL GEN</div>
@@ -29,36 +28,36 @@ function Footer() {
                 <FaFacebook />
               </li>
             </ul>
-            <div className="w-[22rem] text-sm">
+            <div className="w-full text-sm md:w-[22rem]">
               Lorem ipsum dolor sit amet consectetur adipisicing elit. At
               tempora neque quis repellendus temporibus excepturi aliquam modi.
               Nulla laudantium facilis, natus neque ea dolorem laborum doloribus
               dolores, quae impedit nemo.
             </div>
           </div>
-          <div className="flex grow items-end justify-end gap-10">
+          <div className="jsutify-start flex grow flex-row items-end gap-10 md:flex-col md:justify-end">
             <ul>
-              <li>adress</li>
+              <li>Address</li>
               <li>1</li>
               <li>2</li>
               <li>3</li>
             </ul>
             <ul>
-              <li>adress</li>
+              <li>Address</li>
               <li>1</li>
               <li>2</li>
               <li>3</li>
             </ul>
             <ul>
-              <li>adress</li>
+              <li>Address</li>
               <li>1</li>
               <li>2</li>
               <li>3</li>
             </ul>
           </div>
         </div>
-        <div className="flex items-center justify-between">
-          <div>@copyright all rights reserved</div>
+        <div className="mt-8 flex flex-col items-center justify-between md:flex-row">
+          <div>&copy; All rights reserved</div>
           <div>
             <ul className="flex gap-2">
               <li>

@@ -1,17 +1,26 @@
 import { createContext, useContext, useState } from "react";
-import { Product } from "../types/product";
-const initialProductState: Product = {
-  id: 0,
+import { ProductFormValues } from "../types/product";
+export const initialProductState: ProductFormValues = {
+  id: undefined,
   name: "",
   description: "",
-  price: 0,
-  stock: 0,
-  overview_img_url: "",
   category_id: 0,
+  group_id: 0,
+  product_details: [
+    {
+      size: "",
+      color: "",
+      discount: 0,
+      price: 0,
+      stock: 0,
+      img_preview: undefined,
+    },
+  ],
+  images: undefined,
 };
 type ProductContextType = {
-  selectedProduct: Product;
-  setSelectedProduct: React.Dispatch<React.SetStateAction<Product>>;
+  selectedProduct: ProductFormValues;
+  setSelectedProduct: React.Dispatch<React.SetStateAction<ProductFormValues>>;
   formData: FormData | null;
   setFormData: React.Dispatch<React.SetStateAction<FormData | null>>;
   isDialogOpen: boolean;
@@ -20,7 +29,7 @@ type ProductContextType = {
   setValidationErrors: React.Dispatch<
     React.SetStateAction<Record<string, string>>
   >;
-  initialProductState: Product;
+  initialProductState: ProductFormValues;
   imagePreview: string | null;
   setImagePreview: React.Dispatch<React.SetStateAction<string | null>>;
 };
@@ -30,7 +39,7 @@ const ProductProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [selectedProduct, setSelectedProduct] =
-    useState<Product>(initialProductState);
+    useState<ProductFormValues>(initialProductState);
   const [formData, setFormData] = useState<FormData | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [validationErrors, setValidationErrors] = useState<

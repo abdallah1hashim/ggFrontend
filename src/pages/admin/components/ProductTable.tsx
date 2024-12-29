@@ -9,14 +9,14 @@ import {
 } from "../../../components/ui/table";
 import { Button } from "../../../components/ui/button";
 import { Edit, Trash2, PackageX } from "lucide-react";
-import { Product } from "../../../types/product";
+import { Product, ProductFormValues } from "../../../types/product";
 import { motion } from "framer-motion";
 
 interface ProductTableProps {
   products: Product[];
   isLoading: boolean;
   error?: any;
-  onEdit: (product: Product) => void;
+  onEdit: (product: ProductFormValues) => void;
   onDelete: (id: number) => void;
 }
 
@@ -43,7 +43,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
   return (
     <Table>
       <TableHeader>
-        <TableRow>
+        <TableRow className="hover:bg-transparent">
           <TableHead>ID</TableHead>
           <TableHead>Name</TableHead>
           <TableHead>Price</TableHead>
@@ -54,7 +54,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
       </TableHeader>
       <TableBody>
         {isLoading ? (
-          <TableRow>
+          <TableRow className="">
             <motion.td
               {...loadingAnimation}
               colSpan={6}
@@ -64,7 +64,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
             </motion.td>
           </TableRow>
         ) : error ? (
-          <TableRow>
+          <TableRow className="">
             <TableCell className="text-center" colSpan={6}>
               <div className="flex items-center justify-center space-x-2 text-red-500">
                 <PackageX className="h-6 w-6" />
@@ -73,7 +73,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
             </TableCell>
           </TableRow>
         ) : products.length === 0 ? (
-          <TableRow>
+          <TableRow className="">
             <TableCell className="text-center text-gray-500" colSpan={6}>
               No products found
             </TableCell>
@@ -82,29 +82,18 @@ const ProductTable: React.FC<ProductTableProps> = ({
           products.map((product) => (
             <TableRow
               key={product.id}
-              className="transition-colors hover:bg-gray-50"
+              className="transition-colors hover:bg-primary-800"
             >
               <TableCell>{product.id}</TableCell>
               <TableCell>{product.name}</TableCell>
               <TableCell>${product.price}</TableCell>
-              <TableCell>
-                <span
-                  className={` ${
-                    product.stock <= 10
-                      ? "text-red-500"
-                      : product.stock <= 25
-                        ? "text-yellow-500"
-                        : "text-green-500"
-                  } `}
-                >
-                  {product.stock}
-                </span>
-              </TableCell>
+              <TableCell>{0}</TableCell>
               <TableCell>{product.category_name as string}</TableCell>
               <TableCell className="text-right">
                 <Button
                   variant="ghost"
                   size="icon"
+                  // @ts-ignore
                   onClick={() => onEdit(product)}
                   className="mr-1"
                 >

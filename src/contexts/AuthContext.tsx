@@ -1,4 +1,10 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { UserPublicData } from "../types/user";
 import FullScreenLoader from "../components/ui/FullScreenLoader";
 import { AnimatePresence } from "framer-motion";
@@ -27,6 +33,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const isLoggedIn = !!user;
 
+  // Check if user is already logged in
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
     if (savedUser) {
@@ -35,12 +42,14 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     setIsInitializing(false);
   }, []);
 
+  // Save user to local storage
   useEffect(() => {
     if (user) {
       localStorage.setItem("user", JSON.stringify(user));
     }
   }, [user]);
 
+  // Logout
   const { mutate: logoutMutation } = useMutation(logoutRequest, {
     onSuccess: () => {
       toast({
@@ -66,10 +75,11 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     },
   });
 
-  const logout = () => {
+  const logout = useCallback(() => {
     logoutMutation();
-  };
+  }, [logoutMutation]);
 
+  // Confirm user
   const confirmedUser =
     user || JSON.parse(localStorage.getItem("user") || "null");
 

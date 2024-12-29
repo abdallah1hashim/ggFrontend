@@ -35,7 +35,10 @@ function App() {
                 </Route>
                 {/* Store Routes */}
                 <Route element={<StoreLayout />}>
-                  <Route path="/store" element={<Store />} />
+                  <Route path="/store" element={<Store />}>
+                    <Route path=":category" element={<Store />} />
+                    <Route path=":category/:productId" element={<Store />} />
+                  </Route>
                 </Route>
                 <Route path="*" element={<PageNotFound />} />
               </Route>

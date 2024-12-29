@@ -8,12 +8,12 @@ import {
 import { Button } from "../../components/ui/button";
 import { Plus, AlertCircle, Loader2 } from "lucide-react";
 import { toast } from "../../hooks/use-toast";
-import { Product } from "../../types/product";
-import ProductTable from "./ui/ProductTable";
+import { Product, ProductFormValues } from "../../types/product";
+import ProductTable from "./components/ProductTable";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getProducts, deleteProduct } from "../../api/products";
 import { Alert, AlertTitle, AlertDescription } from "../../components/ui/alert";
-import ProductForm from "./ui/ProductForm";
+import ProductForm from "./components/ProductForm";
 import { useProduct } from "../../contexts/ProductContext";
 
 const Products: React.FC = () => {
@@ -23,9 +23,8 @@ const Products: React.FC = () => {
     setIsDialogOpen,
     setSelectedProduct,
     setFormData,
-    formData,
     setValidationErrors,
-    selectedProduct,
+
     initialProductState,
   } = useProduct();
   const {
@@ -72,7 +71,7 @@ const Products: React.FC = () => {
     setIsDialogOpen(true);
   }, []);
 
-  const handleEditProduct = useCallback((product: Product) => {
+  const handleEditProduct = useCallback((product: ProductFormValues) => {
     setSelectedProduct({ ...product });
     setFormData(new FormData());
     setValidationErrors({});
@@ -91,7 +90,7 @@ const Products: React.FC = () => {
         </Alert>
       )}
 
-      <Card>
+      <Card className="bg-primary text-primary-50">
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle>Product Management</CardTitle>
@@ -117,8 +116,9 @@ const Products: React.FC = () => {
           )}
         </CardContent>
       </Card>
-
-      <ProductForm />
+      <div className="overflow-auto">
+        <ProductForm />
+      </div>
     </div>
   );
 };

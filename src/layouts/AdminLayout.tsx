@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { Menu } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "../components/ui/sheet";
-import AdminHeader from "../pages/admin/ui/AdminHeader";
-import SideBarContent from "../pages/admin/ui/SideBarContent";
+import AdminHeader from "../pages/admin/components/AdminHeader";
+import SideBarContent from "../pages/admin/components/SideBarContent";
 import { Outlet } from "react-router-dom";
 import { Toaster } from "../components/ui/toaster";
 import { useAuth } from "../contexts/AuthContext";
@@ -53,7 +53,6 @@ const AdminLayout = () => {
 
       {/* Main Content */}
       <div className="flex flex-1 flex-col">
-        <AdminHeader />
         <main className="flex-1 overflow-y-auto p-4">
           <Outlet />
         </main>

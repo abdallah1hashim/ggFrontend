@@ -7,8 +7,11 @@ export const getProducts = async () => {
 };
 
 export const createProduct = async (data: ProductData) => {
-  console.log("here");
-  const response = await axiosInstance.post("/shop/products", data);
+  const response = await axiosInstance.post("/shop/products", data, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
   return response.data;
 };
 

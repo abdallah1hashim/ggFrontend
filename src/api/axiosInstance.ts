@@ -8,6 +8,7 @@ const axiosInstance = axios.create({
   baseURL: apiUrl,
   headers: {
     "Content-Type": "application/json",
+    Accept: "application/json",
   },
   withCredentials: true,
 });
@@ -23,11 +24,15 @@ axiosInstance.interceptors.response.use(
     if (
       errorMessage.includes("No access token provided") ||
       errorMessage.includes("No cookies provided") ||
+      errorMessage.includes("Token expired") ||
+      errorMessage.includes("Unauthorized") ||
+      errorMessage.includes("Forbidden") ||
       errorMessage.includes("Token expired")
     ) {
+      clearAuthStorage();
+      redirect("/auth/login");
     }
-    clearAuthStorage();
-    redirect("/session-expired");
+
     return Promise.reject(error);
   },
 );

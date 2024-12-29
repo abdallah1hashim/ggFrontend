@@ -38,7 +38,7 @@ export const EditableRow: React.FC<{
       </TableCell>
     ))}
     <TableCell className="space-x-2 text-right">
-      <Button variant="outline" size="icon" onClick={onUpdateRow}>
+      <Button size="icon" onClick={onUpdateRow}>
         <Check className="h-4 w-4" />
       </Button>
       <Button variant="outline" size="icon" onClick={() => setEditingRow(null)}>
@@ -53,21 +53,21 @@ interface ReadOnlyRowProps<T> {
   row: T;
   onEdit: () => void;
   onDelete: () => void;
-  fields: { key: keyof T; label: string; placeholder: string }[];
+  keys: string[];
 }
 
 export const ReadOnlyRow = <T extends Record<string, any>>({
   row,
   onEdit,
   onDelete,
-  fields,
+  keys,
 }: ReadOnlyRowProps<T>) => (
   <>
-    {fields.map((field) => (
-      <TableCell key={String(field.key)}>{row[field.key]}</TableCell>
+    {keys.map((keys) => (
+      <TableCell key={String(keys)}>{row[keys]}</TableCell>
     ))}
     <TableCell className="space-x-2 text-right">
-      <Button variant="outline" size="icon" onClick={onEdit}>
+      <Button size="icon" onClick={onEdit}>
         <Edit className="h-4 w-4" />
       </Button>
       <AlertDialog>
@@ -76,7 +76,7 @@ export const ReadOnlyRow = <T extends Record<string, any>>({
             <Trash2 className="h-4 w-4" />
           </Button>
         </AlertDialogTrigger>
-        <AlertDialogContent>
+        <AlertDialogContent className="bg-primary-800">
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
@@ -84,7 +84,9 @@ export const ReadOnlyRow = <T extends Record<string, any>>({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel className="hover:bg-primary-700/80 border-none bg-primary-700 text-red-500 hover:text-red-500">
+              Cancel
+            </AlertDialogCancel>
             <AlertDialogAction onClick={onDelete}>Delete</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
