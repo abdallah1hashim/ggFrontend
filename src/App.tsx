@@ -16,6 +16,7 @@ import Home from "./pages/home/Home";
 import PageNotFound from "./pages/PageNotFound";
 import Store from "./pages/store/Store";
 import StoreLayout from "./layouts/StoreLayout";
+import Group from "./pages/admin/Group";
 
 const queryClient = new QueryClient();
 
@@ -57,6 +58,7 @@ function App() {
                 <Route path="users" element={<Users />} />
                 <Route path="categories" element={<Categories />} />
                 <Route path="orders" element={<Orders />} />
+                <Route path="groups" element={<Group />} />
               </Route>
             </Routes>
           </AuthProvider>

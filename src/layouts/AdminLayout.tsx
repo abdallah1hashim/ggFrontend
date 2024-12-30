@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Menu } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "../components/ui/sheet";
-import AdminHeader from "../pages/admin/components/AdminHeader";
 import SideBarContent from "../pages/admin/components/SideBarContent";
 import { Outlet } from "react-router-dom";
 import { Toaster } from "../components/ui/toaster";

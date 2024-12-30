@@ -23,11 +23,11 @@ import { createProduct, updateProduct } from "../../../api/products";
 import { ProductData, ProductFormValues } from "../../../types/product";
 import { toast } from "../../../hooks/use-toast";
 import ProductDetailRow from "./ProductDetailRow";
-import { createAndEditProductSchema } from "../../../validators/createAndEditProductSchema";
+import { Product as ProductSchema } from "../../../validators/Schemas";
 import { FilePreview } from "../../../lib/types";
 import FormFieldWrapper from "../../../components/ui/FormFieldWrapper";
 import ProductCategorySelect from "./ProductCategorySelect";
-import { fettchGroups } from "../../../api/groups";
+import { fetchGroups } from "../../../api/groups";
 
 const ProductForm: React.FC = () => {
   const queryClient = useQueryClient();
@@ -54,7 +54,7 @@ const ProductForm: React.FC = () => {
     data: groups,
     isLoading: isGroupsLoading,
     error: groupsError,
-  } = useQuery("groups", fettchGroups);
+  } = useQuery("groups", fetchGroups);
 
   const groupOptions = groups?.groups?.map((group) => ({
     value: group.id.toString(),

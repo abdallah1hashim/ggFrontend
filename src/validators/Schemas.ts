@@ -1,5 +1,5 @@
 import { z } from "zod";
-
+// product
 const MAX_FILE_SIZE_MB = Number(import.meta.env.VITE_MAX_FILE_SIZE_MB) || 5;
 const ALLOWED_MIME_TYPES = ["image/jpeg", "image/png"];
 
@@ -12,7 +12,7 @@ const fileValidator = (file: File | unknown) => {
 };
 const fileValidationError = `File must be a JPEG or PNG and less than ${MAX_FILE_SIZE_MB}MB.`;
 
-export const createAndEditProductSchema = z.object({
+export const Product = z.object({
   name: z.string().nonempty("Product name is required."),
   description: z.string().nonempty("Description is required."),
   category_id: z.preprocess(
@@ -59,3 +59,20 @@ export const createAndEditProductSchema = z.object({
       return new Set(fileNames).size === fileNames.length;
     }, "Duplicate file names are not allowed."),
 });
+
+export type ProductFormData = z.infer<typeof Product>;
+
+// category
+export const Category = z.object({
+  name: z.string().nonempty("Category name is required."),
+  parentId: z.number().optional(),
+});
+
+export type CategoryFormData = z.infer<typeof Category>;
+
+// Group
+export const Group = z.object({
+  name: z.string().nonempty("Group name is required."),
+});
+
+export type GroupFormData = z.infer<typeof Group>;

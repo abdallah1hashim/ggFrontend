@@ -1,5 +1,5 @@
 function Users() {
-  return <div>users page</div>;
+  return <div></div>;
 }
 
 export default Users;

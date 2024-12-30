@@ -10,6 +10,6 @@ export interface FilePreview {
   details: { [key: number]: string };
 }
 export type Group = {
-  id: number;
+  id?: number;
   name: string;
 };

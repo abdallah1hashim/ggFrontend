@@ -13,6 +13,7 @@ const adminNavItems = [
   { name: "Products", icon: PackageOpen, path: "products" },
   { name: "Users", icon: Users, path: "users" },
   { name: "Categories", icon: Grid, path: "categories" },
+  { name: "Groups", icon: Grid, path: "groups" },
 ];
 
 function SideBarContent() {
