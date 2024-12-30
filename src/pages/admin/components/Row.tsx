@@ -67,13 +67,13 @@ export const ReadOnlyRow = <T extends Record<string, any>>({
       <TableCell key={String(keys)}>{row[keys]}</TableCell>
     ))}
     <TableCell className="space-x-2 text-right">
-      <Button size="icon" onClick={onEdit}>
+      <Button variant="ghost" size="icon" onClick={onEdit}>
         <Edit className="h-4 w-4" />
       </Button>
       <AlertDialog>
         <AlertDialogTrigger asChild>
-          <Button variant="destructive" size="icon">
-            <Trash2 className="h-4 w-4" />
+          <Button variant="ghost" size="icon" className="hover:bg-red-500">
+            <Trash2 className="h-4 w-4 text-primary-50" />
           </Button>
         </AlertDialogTrigger>
         <AlertDialogContent className="bg-primary-800">
@@ -84,7 +84,7 @@ export const ReadOnlyRow = <T extends Record<string, any>>({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className="hover:bg-primary-700/80 border-none bg-primary-700 text-red-500 hover:text-red-500">
+            <AlertDialogCancel className="border-none bg-primary-700 text-red-500 hover:bg-primary-700/80 hover:text-red-500">
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction onClick={onDelete}>Delete</AlertDialogAction>

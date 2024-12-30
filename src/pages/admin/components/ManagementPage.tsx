@@ -27,7 +27,17 @@ interface ManagementPageProps<T extends { id: number }> {
   columns: Column[];
   fetchData: () => Promise<{ [key: string]: T[] }>;
   deleteData: (id: number) => Promise<void>;
-  FormComponent: React.ComponentType<{
+  FormComponent?: React.ComponentType<{
+    isDialogOpen: boolean;
+    setIsDialogOpen: (isOpen: boolean) => void;
+    selectedItem: any;
+  }>;
+  FormCreateComponent?: React.ComponentType<{
+    isDialogOpen: boolean;
+    setIsDialogOpen: (isOpen: boolean) => void;
+    selectedItem: any;
+  }>;
+  FormEditComponent?: React.ComponentType<{
     isDialogOpen: boolean;
     setIsDialogOpen: (isOpen: boolean) => void;
     selectedItem: any;
@@ -43,6 +53,8 @@ function ManagementPage<T extends { id: number }>({
   fetchData,
   deleteData,
   FormComponent,
+  FormCreateComponent,
+  FormEditComponent,
   dataKey,
   additionalFormProps = {},
 }: ManagementPageProps<T>) {
@@ -125,12 +137,28 @@ function ManagementPage<T extends { id: number }>({
         </CardContent>
       </Card>
       <div>
-        <FormComponent
-          isDialogOpen={isDialogOpen}
-          setIsDialogOpen={setIsDialogOpen}
-          selectedItem={selectedItem}
-          {...additionalFormProps}
-        />
+        {FormComponent ? (
+          <FormComponent
+            isDialogOpen={isDialogOpen}
+            setIsDialogOpen={setIsDialogOpen}
+            selectedItem={selectedItem}
+            {...additionalFormProps}
+          />
+        ) : FormCreateComponent ? (
+          <FormCreateComponent
+            isDialogOpen={isDialogOpen}
+            setIsDialogOpen={setIsDialogOpen}
+            selectedItem={selectedItem}
+            {...additionalFormProps}
+          />
+        ) : FormEditComponent ? (
+          <FormEditComponent
+            isDialogOpen={isDialogOpen}
+            setIsDialogOpen={setIsDialogOpen}
+            selectedItem={selectedItem}
+            {...additionalFormProps}
+          />
+        ) : null}
       </div>
     </div>
   );

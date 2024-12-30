@@ -1,12 +1,11 @@
 import { Label } from "./label";
 import { Input } from "./input";
-import { FieldError } from "react-hook-form";
 import React, { ForwardedRef } from "react";
 
 interface FormFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   id: string;
   label: string;
-  error?: FieldError;
+  error?: string;
   type?: React.HTMLInputTypeAttribute;
   children?: React.ReactNode;
 }
@@ -29,7 +28,7 @@ const FormField = React.forwardRef(
         />
         {error && (
           <p id={`${id}-error`} className="mt-1 text-sm text-red-500">
-            {error.message}
+            {error}
           </p>
         )}
         {children}

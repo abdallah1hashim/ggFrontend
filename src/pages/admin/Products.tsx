@@ -124,3 +124,31 @@ const Products: React.FC = () => {
 };
 
 export default Products;
+/*
+import { deleteProduct, getProducts } from "../../api/products";
+import ManagementPage from "./components/ManagementPage";
+import ProductForm from "./components/ProductForm";
+
+const Columns = [
+  { key: "id", label: "ID" },
+  { key: "name", label: "Product Name" },
+  { key: "category", label: "Category Name" },
+];
+
+const Products: React.FC = () => {
+  return (
+    <ManagementPage
+      title="Products"
+      queryKey="products"
+      columns={Columns}
+      fetchData={getProducts}
+      deleteData={deleteProduct}
+      FormComponent={ProductForm}
+      dataKey="products"
+    />
+  );
+};
+
+export default Products;
+
+*/

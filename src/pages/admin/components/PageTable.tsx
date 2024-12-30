@@ -5,32 +5,26 @@ import {
   TableHeader,
   TableRow,
 } from "../../../components/ui/table";
-import { EditableRow, ReadOnlyRow } from "./Row";
+import { ReadOnlyRow } from "./Row";
 
 interface PageTableProps<T> {
   rows: T[];
   columns: any[];
-  fields?: any[];
-  editingRow?: T | null;
   onEdit: (row: T) => void;
-  onUpdateRow?: () => void;
   onDeleteRow: (id: number) => void;
 }
 
 const PageTable = <T extends { id: number }>({
   rows,
   columns,
-  fields,
-  editingRow,
   onEdit,
-  onUpdateRow,
   onDeleteRow,
 }: PageTableProps<T>) => {
   const keys = Object.keys(rows[0]).map((key) => key);
   return (
     <Table>
       <TableHeader>
-        <TableRow>
+        <TableRow className="hover:bg-primary">
           {columns.map((column) => (
             <TableHead key={String(column.key)}>{column.label}</TableHead>
           ))}
@@ -39,22 +33,18 @@ const PageTable = <T extends { id: number }>({
       </TableHeader>
       <TableBody>
         {rows.map((row) => (
-          <TableRow key={row.id}>
-            {editingRow?.id === row.id ? (
-              <EditableRow
-                editingRow={editingRow}
-                fields={fields || []}
-                setEditingRow={onEdit}
-                onUpdateRow={onUpdateRow || (() => {})}
-              />
-            ) : (
+          <TableRow
+            key={row.id}
+            className="transition-colors hover:bg-primary-800"
+          >
+            {
               <ReadOnlyRow
                 row={row}
                 onEdit={() => onEdit(row)}
                 onDelete={() => onDeleteRow(row.id)}
                 keys={keys}
               />
-            )}
+            }
           </TableRow>
         ))}
       </TableBody>
