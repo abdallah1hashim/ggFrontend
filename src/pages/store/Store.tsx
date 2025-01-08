@@ -1,67 +1,39 @@
 import { motion } from "framer-motion";
 import { FaRegSquare } from "react-icons/fa6";
 import { GoColumns } from "react-icons/go";
-import Section from "../../components/ui/Section";
 import StorePagination from "./compoenents/StorePagination";
-import { useSearchParams } from "react-router-dom";
 import StoreCard from "./compoenents/StoreCard";
-import { Query, QueryClient, useQuery } from "react-query";
+import { useQuery } from "react-query";
 import { getProducts } from "../../api/products";
+import { useSearchParamsHandler } from "../../hooks/useSearchParamsHandler";
+import { RetrievedProducts } from "../../types/product";
+import StoreError from "./compoenents/StoreError";
+import StoreSkeleton from "./compoenents/StoreSkeleton";
+import NoItemsFound from "./compoenents/NoProductsFound";
 
-// Sample product data
-const products = [
-  {
-    id: 1,
-    name: "Sleek Minimalist Watch",
-    price: 249.99,
-    image: "/api/placeholder/400/400",
-    category: "Accessories",
-    description: "Elegant timepiece with modern design.",
-  },
-  {
-    id: 2,
-    name: "Wireless Noise-Canceling Headphones",
-    price: 199.99,
-    image: "/api/placeholder/400/400",
-    category: "Electronics",
-    description: "Premium sound quality with active noise cancellation.",
-  },
-  {
-    id: 3,
-    name: "Leather Messenger Bag",
-    price: 179.99,
-    image: "/api/placeholder/400/400",
-    category: "Accessories",
-    description: "Handcrafted leather bag for professionals.",
-  },
-  {
-    id: 3,
-    name: "Leather Messenger Bag",
-    price: 179.99,
-    image: "/api/placeholder/400/400",
-    category: "Accessories",
-    description: "Handcrafted leather bag for professionals.",
-  },
-];
+interface GetProducts {
+  limit: number;
+  maxPage: number;
+  page: number;
+  products: RetrievedProducts[];
+  total_products: number;
+}
 
 const StorePage = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const { searchParams, handleParams } = useSearchParamsHandler();
   const page = searchParams.get("page") || 1;
 
-  const { data, isLoading, error } = useQuery("products", getProducts);
+  const { data, isLoading, error } = useQuery<GetProducts>("products", () =>
+    getProducts({ limit: 10, page: Number(page) }),
+  );
+  const products = data?.products || [];
 
-  console.log(data);
+  if (error) return <StoreError />;
+  if (isLoading) return <StoreSkeleton />;
+  if (products.length === 0) return <NoItemsFound />;
 
-  function handleParams(query: string, value: string | number) {
-    setSearchParams((prev) => {
-      const updated = new URLSearchParams(prev);
-      updated.set(query, String(value));
-      return updated;
-    });
-  }
-  searchParams;
   return (
-    <Section className="container mx-auto min-h-screen px-4 py-8">
+    <>
       <motion.header
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
@@ -91,7 +63,7 @@ const StorePage = () => {
             },
           },
         }}
-        className="grid grid-cols-2 gap-4 md:grid-cols-4"
+        className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
       >
         {products.map((product) => (
           <motion.div
@@ -114,10 +86,10 @@ const StorePage = () => {
         <StorePagination
           page={+page < 1 ? 1 : +page}
           handlePage={handleParams}
-          totalPages={5}
+          totalPages={data?.maxPage || 1}
         />
       </motion.footer>
-    </Section>
+    </>
   );
 };
 

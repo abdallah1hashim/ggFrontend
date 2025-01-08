@@ -78,22 +78,27 @@ export const Group = z.object({
 export type GroupFormData = z.infer<typeof Group>;
 
 // UserAdminSide`
+const Name = z.string().nonempty("Name is required.");
+const Email = z.string().email("Invalid email address.");
+const Password = z
+  .string()
+  .nonempty("Password is required.")
+  .min(8, "Password must be at least 8 characters long.")
+  .max(20, "Password must be at most 20 characters long.")
+  .regex(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/,
+    "Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character.",
+  );
 const Role = z.enum(["admin", "staff", "customer", "supplier"] as const, {
   required_error: "Role is required",
   invalid_type_error: "Role must be one of: ADMIN, STAFF, CUSTOMER, SUPPLIER",
 });
+const Activity = z.boolean().default(true);
 
 export const UserAdminSide = z.object({
-  name: z.string().nonempty("Name is required."),
-  email: z.string().email("Invalid email address."),
-  role: Role,
-  password: z
-    .string()
-    .nonempty("Password is required.")
-    .min(8, "Password must be at least 8 characters long.")
-    .max(20, "Password must be at most 20 characters long.")
-    .regex(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/,
-      "Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character.",
-    ),
+  name: Name,
+  email: Email,
+  role: Role.default("customer"),
+  password: Password,
+  is_active: Activity,
 });

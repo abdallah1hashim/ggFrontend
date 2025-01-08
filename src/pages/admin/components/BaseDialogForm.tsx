@@ -91,19 +91,30 @@ export function BaseDialogForm<T extends z.ZodType>({
     },
   });
 
+  const handleSubmitError = (result: z.SafeParseReturnType<any, any>) => {
+    const formattedErrors: Record<string, string> = {};
+    result.error?.errors.forEach((error) => {
+      formattedErrors[error.path[0] as string] = error.message;
+    });
+    setErrors(formattedErrors);
+    toast({
+      title: "Error",
+      description: result.error?.message || "An error occurred",
+      variant: "destructive",
+    });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Validate form data
     const result = schema.safeParse(values);
+    console.log(result);
     if (!result.success) {
-      const formattedErrors: Record<string, string> = {};
-      result.error.errors.forEach((error) => {
-        formattedErrors[error.path[0] as string] = error.message;
-      });
-      setErrors(formattedErrors);
+      handleSubmitError(result);
       return;
     }
+    console.log("clicked");
 
     if (selectedItem?.id) {
       updateMutationHook.mutate({ id: selectedItem.id, data: values });

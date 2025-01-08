@@ -17,6 +17,7 @@ import PageNotFound from "./pages/PageNotFound";
 import Store from "./pages/store/Store";
 import StoreLayout from "./layouts/StoreLayout";
 import Group from "./pages/admin/Group";
+import Product from "./pages/store/Product";
 
 const queryClient = new QueryClient();
 
@@ -38,8 +39,11 @@ function App() {
                 <Route element={<StoreLayout />}>
                   <Route path="/store" element={<Store />}>
                     <Route path=":category" element={<Store />} />
-                    <Route path=":category/:productId" element={<Store />} />
                   </Route>
+                  <Route
+                    path="store/:category/:productId"
+                    element={<Product />}
+                  />
                 </Route>
                 <Route path="*" element={<PageNotFound />} />
               </Route>

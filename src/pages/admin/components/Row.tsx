@@ -15,6 +15,7 @@ import {
   AlertDialogTrigger,
 } from "../../../components/ui/alert-dialog";
 import { TableCell } from "../../../components/ui/table";
+import ActivityIcon from "../../../components/ui/activityIcon";
 
 export const EditableRow: React.FC<{
   editingRow: any;
@@ -63,9 +64,19 @@ export const ReadOnlyRow = <T extends Record<string, any>>({
   keys,
 }: ReadOnlyRowProps<T>) => (
   <>
-    {keys.map((keys) => (
-      <TableCell key={String(keys)}>{row[keys]}</TableCell>
-    ))}
+    {keys.map((keys) => {
+      const isBoolean = typeof row[keys] === "boolean";
+      const isDate = typeof row[keys] === "string" && row[keys].includes("T");
+      const formatedDate = isDate
+        ? new Date(row[keys]).toLocaleDateString()
+        : "";
+      const data = isDate ? formatedDate : row[keys];
+      return (
+        <TableCell key={String(keys)}>
+          {isBoolean ? <ActivityIcon state={data} /> : data}
+        </TableCell>
+      );
+    })}
     <TableCell className="space-x-2 text-right">
       <Button variant="ghost" size="icon" onClick={onEdit}>
         <Edit className="h-4 w-4" />
@@ -84,10 +95,15 @@ export const ReadOnlyRow = <T extends Record<string, any>>({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className="border-none bg-primary-700 text-red-500 hover:bg-primary-700/80 hover:text-red-500">
+            <AlertDialogCancel className="border-none bg-primary-700 text-primary-50 hover:bg-primary-700/80 hover:text-primary-50">
               Cancel
             </AlertDialogCancel>
-            <AlertDialogAction onClick={onDelete}>Delete</AlertDialogAction>
+            <AlertDialogAction
+              onClick={onDelete}
+              className="border-none bg-primary-700 text-red-500 hover:bg-primary-700/80 hover:text-red-500"
+            >
+              Delete
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

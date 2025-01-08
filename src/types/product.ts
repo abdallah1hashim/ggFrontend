@@ -1,21 +1,24 @@
-export interface Product {
-  id?: number;
+export interface ProductWithImagesAndDetails {
+  id: number;
   name: string;
   description: string;
-  price: number;
-  overview_img_url: string | File | null;
-  category_id?: number;
-  created_at?: string;
-  updated_at?: string;
-  bought_times?: number;
-  category_name?: string;
+  category_id: number;
+  category: string;
+  details: ProductDetails[];
+  images: {
+    id: number;
+    image_url: string;
+  }[];
+  groups: {
+    id: number;
+    name: string;
+  }[];
 }
 
 export interface ProductImage {
   id?: number;
   product_id: number;
   image_url: string;
-  is_primary?: boolean;
 }
 
 export interface Category {
@@ -27,6 +30,20 @@ export type ProductDetails = {
   size: string;
   color: string;
   stock: number;
+  price: number;
+  discount: number;
+  img_preview: string;
+};
+
+export type RetrievedProducts = {
+  id: number;
+  category_id: number;
+  category_name: string;
+  description: string;
+  name: string;
+  overview_img: string;
+  created_at: string;
+  update_at: string;
 };
 
 export type RetrievedProductDetails = {
@@ -53,10 +70,6 @@ export interface ProductFormValues {
     img_preview?: File;
   }[];
   images?: FileList;
-}
-
-export interface ProductWithImages extends Product {
-  images: ProductImage[];
 }
 
 export interface ProductData

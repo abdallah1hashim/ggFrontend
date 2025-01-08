@@ -1,8 +1,26 @@
-import { ProductData, ProductUpdateData } from "../types/product";
+import {
+  ProductData,
+  ProductUpdateData,
+  ProductWithImagesAndDetails,
+} from "../types/product";
 import axiosInstance from "./axiosInstance";
 
-export const getProducts = async () => {
-  const response = await axiosInstance.get("/shop/products");
+export const getProducts = async ({
+  limit,
+  page,
+}: {
+  limit: number;
+  page: number;
+}) => {
+  const response = await axiosInstance.get(
+    `/shop/products?limit=${limit}&page=${page}`,
+  );
+  return response.data;
+};
+export const getProduct = async ({ id }: { id: number }) => {
+  const response = await axiosInstance.get<{
+    product: ProductWithImagesAndDetails;
+  }>(`/shop/products/${id}`);
   return response.data;
 };
 

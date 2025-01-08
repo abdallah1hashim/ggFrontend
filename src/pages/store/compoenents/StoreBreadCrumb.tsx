@@ -16,7 +16,7 @@ function StoreBreadCrumb() {
           <>
             <BreadcrumbItem key={index}>
               <Link
-                className={`font-bold ${paths[paths.length - 1] === path ? "text-primary-50 hover:text-primary-200" : "text-primary-400 hover:text-primary-200"}`}
+                className={`font-bold ${paths[paths.length - 1] === path ? "text-primary hover:text-primary-800" : "text-primary-400 hover:text-primary-400"}`}
                 to={`/${path === "" ? "" : index > 1 ? paths.slice(1, index + 1).join("/") : path}`}
               >
                 {path === ""
