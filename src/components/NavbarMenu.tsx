@@ -51,41 +51,56 @@ function NavbarMenu({
             </li>
           )}
 
-          <li>
-            <Link to="/store" onClick={() => setMenuOpen(false)}>
-              Store
-            </Link>
-          </li>
           <li className="flex items-center text-sm text-primary-500">
             <span>Categories</span>
             <div className="ml-2 flex-grow border-t border-primary-500" />
           </li>
+
           {isLoading && <div>Loading...</div>}
+          {error && (
+            <div className="text-red-500">Failed to load categories</div>
+          )}
           {categories &&
-            categories?.categories.map((category: CategoryWithChildren) => (
+            categories.categories.length > 0 &&
+            categories.categories.map((category: CategoryWithChildren) => (
               <NavbarMenuListItem
+                key={category.id}
                 category={category}
                 setMenuOpen={setMenuOpen}
               />
             ))}
+
+          {categories && categories.categories.length === 0 && (
+            <div>No categories available</div>
+          )}
+
           <li>
             <div className="ml-2 flex-grow border-t border-primary-500" />
           </li>
+
           {user ? (
-            <li>
-              <Link to="/profile" onClick={() => setMenuOpen(false)}>
-                Profile
-              </Link>
-              <Link to="/cart" onClick={() => setMenuOpen(false)}>
-                Cart
-              </Link>
-              <Link to="/orders" onClick={() => setMenuOpen(false)}>
-                Orders
-              </Link>
-              <Link to="/logout" onClick={() => setMenuOpen(false)}>
-                Logout
-              </Link>
-            </li>
+            <>
+              <li>
+                <Link to="/profile" onClick={() => setMenuOpen(false)}>
+                  Profile
+                </Link>
+              </li>
+              <li>
+                <Link to="/cart" onClick={() => setMenuOpen(false)}>
+                  Cart
+                </Link>
+              </li>
+              <li>
+                <Link to="/orders" onClick={() => setMenuOpen(false)}>
+                  Orders
+                </Link>
+              </li>
+              <li>
+                <Link to="/logout" onClick={() => setMenuOpen(false)}>
+                  Logout
+                </Link>
+              </li>
+            </>
           ) : (
             <>
               <li>
@@ -94,7 +109,7 @@ function NavbarMenu({
                 </Link>
               </li>
               <li>
-                <Link to="/login" onClick={() => setMenuOpen(false)}>
+                <Link to="/register" onClick={() => setMenuOpen(false)}>
                   Register
                 </Link>
               </li>

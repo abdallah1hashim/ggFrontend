@@ -14,6 +14,8 @@ import {
   TabsList,
   TabsTrigger,
 } from "../../components/ui/tabs";
+import { useCartContext } from "../../contexts/CartContext";
+import { useAuth } from "../../contexts/AuthContext";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -28,7 +30,8 @@ function Product() {
   const { data, isLoading, error } = useQuery("products", () =>
     getProduct({ id: Number(productId) }),
   );
-
+  const { addCartMutation, isAdding } = useCartContext();
+  const { user } = useAuth();
   if (isLoading) return <ProductSkeleton />;
 
   if (error || data === undefined || data.product === undefined)
@@ -38,6 +41,15 @@ function Product() {
     data?.product?.images?.[currentImageIndex] ||
     data?.product?.images?.[0] ||
     null;
+
+  const addToCart = () => {
+    addCartMutation({
+      userId: user?.id as number,
+      productId: data.product.id,
+      productDetailsId: data.product.details[0].id,
+      quantity: quantity,
+    });
+  };
 
   return (
     <div className="grid grid-cols-12 gap-8">
@@ -151,7 +163,7 @@ function Product() {
               +
             </button>
           </div>
-          <Button className="flex-1">
+          <Button className="flex-1" onClick={addToCart} disabled={isAdding}>
             <ShoppingCart className="mr-2 h-4 w-4" /> Add to Cart
           </Button>
           <Button variant="outline">

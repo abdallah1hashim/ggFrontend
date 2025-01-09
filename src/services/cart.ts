@@ -2,9 +2,9 @@ import { CartItem } from "../types/cart";
 import { cartItemEditSchemaT, cartItemSchemaT } from "../validators/Schemas";
 import axiosInstance from "./axiosInstance";
 
-export const getAllCartItems = async () => {
+export const getAllCartItems = async ({ userId }: { userId: number }) => {
   const response = await axiosInstance.get<{ cartItems: CartItem[] }>(
-    `/shop/cart`,
+    `/shop/cart/${userId}`,
   );
   return response.data;
 };

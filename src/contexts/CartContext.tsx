@@ -1,5 +1,12 @@
-import { createContext, useContext } from "react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { createContext, useContext, useState } from "react";
+import {
+  QueryObserverResult,
+  RefetchOptions,
+  RefetchQueryFilters,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "react-query";
 import {
   addCartItem,
   getAllCartItems,
@@ -9,21 +16,35 @@ import {
 import { toast, useToast } from "../hooks/use-toast";
 
 import { AnimatePresence } from "framer-motion";
-import FullScreenLoader from "../components/ui/FullScreenLoader";
 import { CartItem } from "../types/cart";
+import { useAuth } from "./AuthContext";
+import { cartItemSchemaT } from "../validators/Schemas";
 
 interface CartContextType {
   cartItems: CartItem[];
-  addCartMutation: (data: any) => void;
+  addCartMutation: (data: cartItemSchemaT) => void;
   updateQuantity: (itemId: number, newQuantity: number) => void;
   deleteCartMutation: (data: any) => void;
   cartFetchError: any;
+  refetch: <TPageData>(
+    options?: (RefetchOptions & RefetchQueryFilters<TPageData>) | undefined,
+  ) => Promise<
+    QueryObserverResult<
+      {
+        cartItems: CartItem[];
+      },
+      Error
+    >
+  >;
+  isLoading: boolean;
   isAdding: boolean;
   isUpdating: boolean;
   isDeleting: boolean;
   subtotal: number;
   SHIPPING: number;
   total: number;
+  isOpen: boolean;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -33,13 +54,18 @@ const CartProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const SHIPPING = 10;
   const queryClient = useQueryClient();
-
+  const [isOpen, setIsOpen] = useState(false);
+  const { user } = useAuth();
   const {
     data,
     isLoading: isInitializing,
     error: cartFetchError,
-  } = useQuery("cart", getAllCartItems);
-  // create mutation
+    refetch,
+  } = useQuery<{ cartItems: CartItem[] }, Error>("cart", () =>
+    getAllCartItems({ userId: user?.id as number }),
+  );
+
+  // Create mutation for adding cart item
   const { mutate: addCartMutation, isLoading: isAdding } = useMutation(
     "cart",
     addCartItem,
@@ -59,7 +85,8 @@ const CartProvider: React.FC<{ children: React.ReactNode }> = ({
       },
     },
   );
-  // update mutation
+
+  // Create mutation for updating cart item
   const { mutate: updateCartMutation, isLoading: isUpdating } = useMutation(
     "cart",
     updateCartItem,
@@ -79,7 +106,8 @@ const CartProvider: React.FC<{ children: React.ReactNode }> = ({
       },
     },
   );
-  // delete mutation
+
+  // Create mutation for deleting cart item
   const { mutate: deleteCartMutation, isLoading: isDeleting } = useMutation(
     "cart",
     removeCartItem,
@@ -117,6 +145,7 @@ const CartProvider: React.FC<{ children: React.ReactNode }> = ({
       0,
     ) || 0;
   const total = subtotal ? subtotal + SHIPPING : 0;
+
   return (
     <CartContext.Provider
       value={{
@@ -125,18 +154,19 @@ const CartProvider: React.FC<{ children: React.ReactNode }> = ({
         updateQuantity,
         deleteCartMutation,
         cartFetchError,
+        refetch,
+        isLoading: isInitializing,
         isAdding,
         isUpdating,
         isDeleting,
         subtotal,
         SHIPPING,
         total,
+        isOpen,
+        setIsOpen,
       }}
     >
-      <AnimatePresence>
-        {isInitializing && <FullScreenLoader />}
-      </AnimatePresence>
-      {!isInitializing && children}
+      <AnimatePresence>{children}</AnimatePresence>
     </CartContext.Provider>
   );
 };

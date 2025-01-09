@@ -4,7 +4,7 @@ import BackButton from "../components/ui/BackButton";
 
 function AuthLayout() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50">
+    <div className="flex min-h-screen w-full items-center justify-center bg-gray-50">
       <Card className="w-full max-w-md p-4 shadow-lg">
         <CardHeader>
           <BackButton className="w-fit" />

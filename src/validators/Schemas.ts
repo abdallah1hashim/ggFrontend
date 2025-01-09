@@ -112,6 +112,7 @@ const Quantity = z
   .max(10, "Quantity cannot exceed 10");
 
 export const cartItemSchema = z.object({
+  userId: ID,
   productId: ID,
   productDetailsId: ID,
   quantity: Quantity,

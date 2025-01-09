@@ -1,4 +1,4 @@
-import { LogIn, Menu, Store } from "lucide-react";
+import { LogIn, Menu, ShoppingCartIcon, Store } from "lucide-react";
 import { useState } from "react";
 import {
   AnimatePresence,
@@ -12,6 +12,7 @@ import Logo from "./Logo";
 import NavbarMenu from "./NavbarMenu";
 import { useAuth } from "../contexts/AuthContext";
 import ExpandableCart from "../pages/store/compoenents/ExpandableCart";
+import { Button } from "./ui/button";
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const [hidden, setHidden] = useState<boolean>(false);
@@ -49,11 +50,13 @@ function Navbar() {
         </div>
         {/* links */}
         <ul className="flex gap-2">
+          <li className="flex items-center justify-center">
+            <Link to="/store">
+              <Store size={18} className="" />
+            </Link>
+          </li>
           {user ? (
             <>
-              <li className="max-w-32">
-                ( "Welcome, " + user.name.split(" ")[0] )
-              </li>
               <li>
                 <ExpandableCart />
               </li>
@@ -65,11 +68,6 @@ function Navbar() {
               </Link>
             </li>
           )}
-          <li className="flex items-center justify-center">
-            <Link to="/store">
-              <Store size={18} className="" />
-            </Link>
-          </li>
         </ul>
         {/* menu items */}
         <AnimatePresence>

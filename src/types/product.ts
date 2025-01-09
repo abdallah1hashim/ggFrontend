@@ -27,6 +27,7 @@ export interface Category {
 }
 
 export type ProductDetails = {
+  id: number;
   size: string;
   color: string;
   stock: number;

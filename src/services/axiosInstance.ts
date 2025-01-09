@@ -26,7 +26,7 @@ axiosInstance.interceptors.response.use(
       errorMessage.includes("No cookies provided") ||
       errorMessage.includes("Token expired") ||
       errorMessage.includes("Unauthorized") ||
-      errorMessage.includes("Forbidden") ||
+      // errorMessage.includes("Forbidden") ||
       errorMessage.includes("Token expired")
     ) {
       clearAuthStorage();

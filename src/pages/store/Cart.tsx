@@ -63,9 +63,12 @@ const CartItem = ({ item }: { item: CartItemT }) => {
 };
 
 const Cart = () => {
-  const { cartItems, subtotal, SHIPPING, total } = useCartContext();
-
-  if (cartItems.length === 0) {
+  const { cartItems, cartFetchError, isLoading, subtotal, SHIPPING, total } =
+    useCartContext();
+  if (isLoading) {
+    return <CartSkeleton />;
+  }
+  if ((cartFetchError || !cartItems || cartItems.length === 0) && !isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 py-12">
         <div className="mx-auto max-w-4xl px-4">
@@ -155,3 +158,48 @@ const Cart = () => {
   );
 };
 export default Cart;
+
+const CartSkeleton = () => (
+  <div className="animate-pulse">
+    <div className="mb-8 flex items-center justify-between">
+      <div className="h-6 w-32 rounded bg-gray-300" />
+      <div className="h-8 w-40 rounded bg-gray-300" />
+    </div>
+    <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+      <div className="lg:col-span-2">
+        <Card>
+          <CardContent className="space-y-6 p-4">
+            {[...Array(3)].map((_, index) => (
+              <div key={index} className="flex gap-4">
+                <div className="h-32 w-32 rounded bg-gray-300" />
+                <div className="flex flex-1 flex-col space-y-3">
+                  <div className="h-6 w-2/3 rounded bg-gray-300" />
+                  <div className="h-4 w-1/2 rounded bg-gray-300" />
+                  <div className="mt-auto flex justify-between">
+                    <div className="h-10 w-24 rounded bg-gray-300" />
+                    <div className="h-6 w-16 rounded bg-gray-300" />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      </div>
+      <div className="lg:col-span-1">
+        <Card>
+          <CardContent className="space-y-4 p-6">
+            <div className="h-6 w-40 rounded bg-gray-300" />
+            <div className="h-10 w-full rounded bg-gray-300" />
+            <div className="space-y-3">
+              <div className="h-4 w-full rounded bg-gray-300" />
+              <div className="h-4 w-2/3 rounded bg-gray-300" />
+              <div className="h-4 w-3/4 rounded bg-gray-300" />
+            </div>
+            <div className="h-12 w-full rounded bg-gray-300" />
+            <div className="h-4 w-2/3 rounded bg-gray-300" />
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  </div>
+);
