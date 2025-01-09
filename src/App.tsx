@@ -18,6 +18,8 @@ import Store from "./pages/store/Store";
 import StoreLayout from "./layouts/StoreLayout";
 import Group from "./pages/admin/Group";
 import Product from "./pages/store/Product";
+import { CartProvider } from "./contexts/CartContext";
+import Cart from "./pages/store/Cart";
 
 const queryClient = new QueryClient();
 
@@ -27,44 +29,47 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
           <AuthProvider>
-            <Routes>
-              <Route element={<RootLayout />}>
-                <Route path="/" element={<Home />} />
-                {/* Auth Routes */}
-                <Route element={<AuthLayout />}>
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/signup" element={<SignUp />} />
-                </Route>
-                {/* Store Routes */}
-                <Route element={<StoreLayout />}>
-                  <Route path="/store" element={<Store />}>
-                    <Route path=":category" element={<Store />} />
+            <CartProvider>
+              <Routes>
+                <Route element={<RootLayout />}>
+                  <Route path="/" element={<Home />} />
+                  {/* Auth Routes */}
+                  <Route element={<AuthLayout />}>
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/signup" element={<SignUp />} />
                   </Route>
-                  <Route
-                    path="store/:category/:productId"
-                    element={<Product />}
-                  />
+                  {/* Store Routes */}
+                  <Route element={<StoreLayout />}>
+                    <Route path="/cart" element={<Cart />} />
+                    <Route path="/store" element={<Store />}>
+                      <Route path=":category" element={<Store />} />
+                    </Route>
+                    <Route
+                      path="store/:category/:productId"
+                      element={<Product />}
+                    />
+                  </Route>
+                  <Route path="*" element={<PageNotFound />} />
                 </Route>
-                <Route path="*" element={<PageNotFound />} />
-              </Route>
-              {/* Admin Routes */}
-              <Route path="/admin" element={<AdminLayout />}>
-                <Route index element={<Navigate to="dashboard" replace />} />
-                <Route path="dashboard" element={<Dashboard />} index />
-                <Route
-                  path="products"
-                  element={
-                    <ProductProvider>
-                      <Products />
-                    </ProductProvider>
-                  }
-                />
-                <Route path="users" element={<Users />} />
-                <Route path="categories" element={<Categories />} />
-                <Route path="orders" element={<Orders />} />
-                <Route path="groups" element={<Group />} />
-              </Route>
-            </Routes>
+                {/* Admin Routes */}
+                <Route path="/admin" element={<AdminLayout />}>
+                  <Route index element={<Navigate to="dashboard" replace />} />
+                  <Route path="dashboard" element={<Dashboard />} index />
+                  <Route
+                    path="products"
+                    element={
+                      <ProductProvider>
+                        <Products />
+                      </ProductProvider>
+                    }
+                  />
+                  <Route path="users" element={<Users />} />
+                  <Route path="categories" element={<Categories />} />
+                  <Route path="orders" element={<Orders />} />
+                  <Route path="groups" element={<Group />} />
+                </Route>
+              </Routes>
+            </CartProvider>
           </AuthProvider>
         </BrowserRouter>
       </QueryClientProvider>

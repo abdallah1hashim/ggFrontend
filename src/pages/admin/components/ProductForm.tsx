@@ -19,7 +19,7 @@ import FormField from "../../../components/ui/FormField";
 import FormSelect from "../../../components/ui/FormSelect";
 import { Button } from "../../../components/ui/button";
 
-import { createProduct, updateProduct } from "../../../api/products";
+import { createProduct, updateProduct } from "../../../services/products";
 import { ProductData, ProductFormValues } from "../../../types/product";
 import { toast } from "../../../hooks/use-toast";
 import ProductDetailRow from "./ProductDetailRow";
@@ -27,7 +27,7 @@ import { Product as ProductSchema } from "../../../validators/Schemas";
 import { FilePreview } from "../../../lib/types";
 import FormFieldWrapper from "../../../components/ui/FormFieldWrapper";
 import ProductCategorySelect from "./ProductCategorySelect";
-import { fetchGroups } from "../../../api/groups";
+import { fetchGroups } from "../../../services/groups";
 
 const ProductForm: React.FC = () => {
   const queryClient = useQueryClient();

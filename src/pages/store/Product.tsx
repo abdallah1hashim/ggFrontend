@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { getProduct } from "../../api/products";
+import { getProduct } from "../../services/products";
 import { useSearchParamsHandler } from "../../hooks/useSearchParamsHandler";
 import { Card, CardContent } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";

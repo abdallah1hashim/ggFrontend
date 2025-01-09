@@ -4,7 +4,7 @@ import { GoColumns } from "react-icons/go";
 import StorePagination from "./compoenents/StorePagination";
 import StoreCard from "./compoenents/StoreCard";
 import { useQuery } from "react-query";
-import { getProducts } from "../../api/products";
+import { getProducts } from "../../services/products";
 import { useSearchParamsHandler } from "../../hooks/useSearchParamsHandler";
 import { RetrievedProducts } from "../../types/product";
 import StoreError from "./compoenents/StoreError";

@@ -6,7 +6,7 @@ import { Input } from "../../components/ui/input";
 import { Button } from "../../components/ui/button";
 import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
-import { login } from "../../api/auth";
+import { login } from "../../services/auth";
 import { toast } from "../../hooks/use-toast";
 import { useAuth } from "../../contexts/AuthContext";
 

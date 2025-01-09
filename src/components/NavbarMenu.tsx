@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useQuery } from "react-query";
-import { fetchNestedCategories } from "../api/category";
+import { fetchNestedCategories } from "../services/category";
 import { CategoryWithChildren } from "../types/categories";
 import NavbarMenuListItem from "./NavbarMenuListItem";
 import { useAuth } from "../contexts/AuthContext";
@@ -71,17 +71,35 @@ function NavbarMenu({
           <li>
             <div className="ml-2 flex-grow border-t border-primary-500" />
           </li>
-
-          <li>
-            <Link to="/login" onClick={() => setMenuOpen(false)}>
-              Login
-            </Link>
-          </li>
-          <li>
-            <Link to="/login" onClick={() => setMenuOpen(false)}>
-              Register
-            </Link>
-          </li>
+          {user ? (
+            <li>
+              <Link to="/profile" onClick={() => setMenuOpen(false)}>
+                Profile
+              </Link>
+              <Link to="/cart" onClick={() => setMenuOpen(false)}>
+                Cart
+              </Link>
+              <Link to="/orders" onClick={() => setMenuOpen(false)}>
+                Orders
+              </Link>
+              <Link to="/logout" onClick={() => setMenuOpen(false)}>
+                Logout
+              </Link>
+            </li>
+          ) : (
+            <>
+              <li>
+                <Link to="/login" onClick={() => setMenuOpen(false)}>
+                  Login
+                </Link>
+              </li>
+              <li>
+                <Link to="/login" onClick={() => setMenuOpen(false)}>
+                  Register
+                </Link>
+              </li>
+            </>
+          )}
         </ul>
       </motion.div>
     </>

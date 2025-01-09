@@ -10,7 +10,7 @@ import FullScreenLoader from "../components/ui/FullScreenLoader";
 import { AnimatePresence } from "framer-motion";
 import { clearAuthStorage } from "../lib/utils";
 import { useMutation } from "react-query";
-import { logoutRequest } from "../api/auth";
+import { logoutRequest } from "../services/auth";
 import { toast } from "../hooks/use-toast";
 
 const environment = import.meta.env.VITE_ENVIROMENT;

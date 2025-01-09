@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { fetchNestedCategories } from "../../../api/category";
+import { fetchNestedCategories } from "../../../services/category";
 import FormFieldWrapper from "../../../components/ui/FormFieldWrapper";
 import FormSelect from "../../../components/ui/FormSelect";
 import { Category } from "../../../lib/types";

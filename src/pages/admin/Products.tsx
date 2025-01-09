@@ -11,7 +11,7 @@ import { toast } from "../../hooks/use-toast";
 import { Product, ProductFormValues } from "../../types/product";
 import ProductTable from "./components/ProductTable";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { getProducts, deleteProduct } from "../../api/products";
+import { getProducts, deleteProduct } from "../../services/products";
 import { Alert, AlertTitle, AlertDescription } from "../../components/ui/alert";
 import ProductForm from "./components/ProductForm";
 import { useProduct } from "../../contexts/ProductContext";

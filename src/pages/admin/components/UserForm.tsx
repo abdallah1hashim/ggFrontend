@@ -1,4 +1,4 @@
-import { createUser, editUser } from "../../../api/user";
+import { createUser, editUser } from "../../../services/user";
 import FormField from "../../../components/ui/FormField";
 import FormFieldWrapper from "../../../components/ui/FormFieldWrapper";
 import FormSelect from "../../../components/ui/FormSelect";

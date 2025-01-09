@@ -1,4 +1,4 @@
-import { deleteUser, getUsers } from "../../api/user";
+import { deleteUser, getUsers } from "../../services/user";
 import ManagementPage from "./components/ManagementPage";
 import UserForm from "./components/UserForm";
 

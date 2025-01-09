@@ -1,6 +1,6 @@
 import React from "react";
 import type { Group as GroupT } from "../../lib/types";
-import { fetchGroups, deleteGroup } from "../../api/groups";
+import { fetchGroups, deleteGroup } from "../../services/groups";
 import GroupsForm from "./components/GroupsForm";
 import ManagementPage from "./components/ManagementPage";
 

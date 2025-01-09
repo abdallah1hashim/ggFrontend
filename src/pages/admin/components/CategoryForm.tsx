@@ -1,6 +1,6 @@
 import React from "react";
 import { Category } from "../../../lib/types";
-import { addCategory, editCategory } from "../../../api/category";
+import { addCategory, editCategory } from "../../../services/category";
 import FormFieldWrapper from "../../../components/ui/FormFieldWrapper";
 import FormField from "../../../components/ui/FormField";
 import FormSelect from "../../../components/ui/FormSelect";

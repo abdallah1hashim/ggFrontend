@@ -1,6 +1,6 @@
 import React from "react";
 import { Group } from "../../../lib/types";
-import { addGroup, editGroup } from "../../../api/groups";
+import { addGroup, editGroup } from "../../../services/groups";
 import FormFieldWrapper from "../../../components/ui/FormFieldWrapper";
 import FormField from "../../../components/ui/FormField";
 import { BaseDialogForm } from "./BaseDialogForm";

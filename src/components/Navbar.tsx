@@ -11,6 +11,7 @@ import Logo from "./Logo";
 
 import NavbarMenu from "./NavbarMenu";
 import { useAuth } from "../contexts/AuthContext";
+import ExpandableCart from "../pages/store/compoenents/ExpandableCart";
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const [hidden, setHidden] = useState<boolean>(false);
@@ -48,15 +49,22 @@ function Navbar() {
         </div>
         {/* links */}
         <ul className="flex gap-2">
-          <li className="max-w-32">
-            {user ? (
-              "Welcome, " + user.name.split(" ")[0]
-            ) : (
+          {user ? (
+            <>
+              <li className="max-w-32">
+                ( "Welcome, " + user.name.split(" ")[0] )
+              </li>
+              <li>
+                <ExpandableCart />
+              </li>
+            </>
+          ) : (
+            <li>
               <Link to="/login">
                 <LogIn size={18} />
               </Link>
-            )}
-          </li>
+            </li>
+          )}
           <li className="flex items-center justify-center">
             <Link to="/store">
               <Store size={18} className="" />

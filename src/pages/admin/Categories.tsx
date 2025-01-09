@@ -1,7 +1,7 @@
 import React from "react";
 import { useQuery } from "react-query";
 import type { Category } from "../../lib/types";
-import { fetchCategories, deleteCategory } from "../../api/category";
+import { fetchCategories, deleteCategory } from "../../services/category";
 import CategoryForm from "./components/CategoryForm";
 import ManagementPage from "./components/ManagementPage";
 

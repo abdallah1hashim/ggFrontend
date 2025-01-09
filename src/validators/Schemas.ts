@@ -102,3 +102,26 @@ export const UserAdminSide = z.object({
   password: Password,
   is_active: Activity,
 });
+
+// Cart
+const ID = z.number().int().min(1, "ID is required");
+const Quantity = z
+  .number()
+  .int()
+  .min(1, "Quantity is required")
+  .max(10, "Quantity cannot exceed 10");
+
+export const cartItemSchema = z.object({
+  productId: ID,
+  productDetailsId: ID,
+  quantity: Quantity,
+});
+
+export type cartItemSchemaT = z.infer<typeof cartItemSchema>;
+
+export const cartItemEditSchema = z.object({
+  id: ID,
+  quantity: Quantity,
+});
+
+export type cartItemEditSchemaT = z.infer<typeof cartItemEditSchema>;
