@@ -10,7 +10,7 @@ function Home() {
   useScroll({});
 
   return (
-    <div ref={ref}>
+    <div className="flex flex-col">
       <Hero />
       <Scroller />
       <BentoGrid />

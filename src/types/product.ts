@@ -1,3 +1,15 @@
+export interface Product {
+  id: number;
+  name: string;
+  description: string;
+  category_id: number;
+  category_name: string;
+  overview_img: string;
+  //
+  created_at: string;
+  updated_at: string;
+}
+
 export interface ProductWithImagesAndDetails {
   id: number;
   name: string;

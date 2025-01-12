@@ -31,19 +31,23 @@ const Products: React.FC = () => {
     data,
     isLoading: isProductsLoading,
     error: productsError,
-  } = useQuery<{ products: Product[] }, Error>(["products"], getProducts, {
-    // Add retry logic
-    retry: 2,
-    // Add error handling
-    onError: (error) => {
-      toast({
-        title: "Failed to Load Products",
-        description:
-          error.message || "Unable to fetch products. Please try again.",
-        variant: "destructive",
-      });
+  } = useQuery<{ products: Product[] }, Error>(
+    ["products"],
+    () => getProducts({ limit: 10, page: 1 }),
+    {
+      // Add retry logic
+      retry: 2,
+      // Add error handling
+      onError: (error) => {
+        toast({
+          title: "Failed to Load Products",
+          description:
+            error.message || "Unable to fetch products. Please try again.",
+          variant: "destructive",
+        });
+      },
     },
-  });
+  );
 
   const deleteProductMutation = useMutation(deleteProduct, {
     onSuccess: (response) => {
